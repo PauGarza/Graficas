@@ -2,13 +2,9 @@ import glfw
 from OpenGL.GL import *
 import time
 
-#-----------------------------Fondo-------------------------------------------
-
 # Función para interpolar entre dos colores
 def lerp_color(color_start, color_end, t):
-    return color_start[0] + (color_end[0] - color_start[0]) * t, \
-           color_start[1] + (color_end[1] - color_start[1]) * t, \
-           color_start[2] + (color_end[2] - color_start[2]) * t
+    return tuple(color_start[i] + (color_end[i] - color_start[i]) * t for i in range(3))
 
 # Colores para diferentes momentos del día
 color_amanecer = (0.9, 0.5, 0.3)  # Colores del amanecer
@@ -22,15 +18,14 @@ duracion_dia = 10
 duracion_atardecer = 5
 duracion_noche = 10
 
-#-------------------------Piso-----------------------------------------------
-
+# Función para dibujar un rectángulo
 def draw_rectangle(x, y, width, height, rotation, color):
-    glPushMatrix()  # Guarda la matriz de transformación actual
-    glTranslate(x, y, 0)  # Traslada el rectángulo a su posición
-    glRotate(rotation, 0, 0, 1)  # Rota el rectángulo
-    glColor3ub(*color)  # Establece el color
+    glPushMatrix()
+    glTranslate(x + width / 2, y + height / 2, 0)  # Mover al centro del rectángulo
+    glRotatef(rotation, 0, 0, 1)  # Rotar alrededor del centro del rectángulo
+    glColor3ub(*color)
     
-    # Dibuja el rectángulo con el centro en la posición actual
+    # Dibujar rectángulo
     glBegin(GL_QUADS)
     glVertex2f(-width / 2, -height / 2)
     glVertex2f(width / 2, -height / 2)
@@ -38,7 +33,7 @@ def draw_rectangle(x, y, width, height, rotation, color):
     glVertex2f(-width / 2, height / 2)
     glEnd()
     
-    glPopMatrix()  # Restaura la matriz de transformación
+    glPopMatrix()
 
 # Inicialización de GLFW
 if not glfw.init():
@@ -53,49 +48,39 @@ if not window:
 
 glfw.make_context_current(window)
 
-start_time = time.time()
-
-glViewport(0, 0, 1366, 1004)
+# Configuración de la proyección ortográfica
 glMatrixMode(GL_PROJECTION)
 glLoadIdentity()
-glOrtho(0, 1366, 0, 1004, -1, 1)
+glOrtho(0, 1366, 1004, 0, -1, 1)  # Se invierte el eje Y para que 0,0 esté en la esquina superior izquierda
 glMatrixMode(GL_MODELVIEW)
 glLoadIdentity()
+
+start_time = time.time()
 
 # Loop principal
 while not glfw.window_should_close(window):
     glfw.poll_events()
-
-    # Piso
-    # Convertir el color hexadecimal a RGB
-    color_rectangulo = (122, 124, 49)  # Color hexadecimal #7A7C31 convertido a RGB
-    # Dibuja el rectángulo para el piso
-    draw_rectangle(683, 502, 1570.2, 617.4, 15.6, (122, 124, 49))
-
+    
     # Calcular el tiempo transcurrido
     current_time = time.time() - start_time
-    t = current_time / 30 # Normalizar el tiempo para la duración total de la animación
+    t = current_time / 30  # Normalizar el tiempo para la duración total de la animación
 
+    # Interpolación de colores para el fondo
     if current_time <= duracion_amanecer:
-        # Interpolar colores para el amanecer
-        t_amanecer = current_time / duracion_amanecer
-        color_actual = lerp_color(color_noche, color_amanecer, t_amanecer)
+        color_actual = lerp_color(color_noche, color_amanecer, current_time / duracion_amanecer)
     elif current_time <= duracion_amanecer + duracion_dia:
-        # Interpolar colores para el día
-        t_dia = (current_time - duracion_amanecer) / duracion_dia
-        color_actual = lerp_color(color_amanecer, color_dia, t_dia)
+        color_actual = lerp_color(color_amanecer, color_dia, (current_time - duracion_amanecer) / duracion_dia)
     elif current_time <= duracion_amanecer + duracion_dia + duracion_atardecer:
-        # Interpolar colores para el atardecer
-        t_atardecer = (current_time - duracion_amanecer - duracion_dia) / duracion_atardecer
-        color_actual = lerp_color(color_dia, color_atardecer, t_atardecer)
+        color_actual = lerp_color(color_dia, color_atardecer, (current_time - duracion_amanecer - duracion_dia) / duracion_atardecer)
     else:
-        # Interpolar colores para la noche
-        t_noche = (current_time - duracion_amanecer - duracion_dia - duracion_atardecer) / duracion_noche
-        color_actual = lerp_color(color_atardecer, color_noche, t_noche)
+        color_actual = lerp_color(color_atardecer, color_noche, (current_time - duracion_amanecer - duracion_dia - duracion_atardecer) / duracion_noche)
 
     # Establecer el color de fondo actual
     glClearColor(*color_actual, 1.0)
     glClear(GL_COLOR_BUFFER_BIT)
+
+    # Dibuja el rectángulo para el piso
+    draw_rectangle(683 - 1570.2 / 2, 502 - 617.4 / 2, 1570.2, 617.4, 15.6, (122, 124, 49))
 
     glfw.swap_buffers(window)
 
