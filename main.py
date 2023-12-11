@@ -20,21 +20,28 @@ duracion_atardecer = 5
 duracion_noche = 10
 
 # Función para dibujar un rectángulo
-def draw_rectangle(x, y, width, height, rotation, color):
+def draw_rectangle(upper_left_x, upper_left_y, width, height, rotation, color):
+    # Calcular el centro del rectángulo
+    center_x = upper_left_x + width / 2
+    center_y = upper_left_y + height / 2
+
     glPushMatrix()
-    glTranslate(x + width / 2, y + height / 2, 0)  # Mover al centro del rectángulo
-    glRotatef(rotation, 0, 0, 1)  # Rotar alrededor del centro del rectángulo
-    glColor3ub(*color)
-    
-    # Dibujar rectángulo
+    # Trasladar al centro para rotación
+    glTranslate(center_x, center_y, 0)
+    # Rotar alrededor del centro del rectángulo
+    glRotatef(rotation, 0, 0, 1)
+    # Establecer color y opacidad
+    glColor4ub(color[0], color[1], color[2], int(color[3] * 255 / 100))
+    # Dibujar rectángulo con el centro en el origen
     glBegin(GL_QUADS)
     glVertex2f(-width / 2, -height / 2)
     glVertex2f(width / 2, -height / 2)
     glVertex2f(width / 2, height / 2)
     glVertex2f(-width / 2, height / 2)
     glEnd()
-    
+
     glPopMatrix()
+
 
 
 # Función para dibujar un círculo
@@ -46,7 +53,7 @@ def draw_circle(x, y, ancho, rotation, color):
     glPushMatrix()
     glTranslate(x, y, 0)  # Mover al centro del círculo
     glRotatef(rotation, 0, 0, 1)  # Rotar alrededor del centro del círculo
-    glColor3ub(*color)
+    glColor4ub(*color)
 
     glBegin(GL_TRIANGLE_FAN)
     glVertex2f(0, 0)  # Centro del círculo
@@ -55,6 +62,31 @@ def draw_circle(x, y, ancho, rotation, color):
     glEnd()
 
     glPopMatrix()
+
+def crear_bici():
+    # Rectángulos basados en los parámetros de las imágenes subidas
+    # (x, y, ancho, alto, rotación, (color))
+    rect_params = [
+        (586.3, 428.2, 215.6, 9.9, 13.4, (0,0,0, 100)),
+        (785, 472.5, 138.1, 8.5, 67.9, (0,0,0, 255)),
+        (782.8, 484.3, 122.1, 9.8, 129.8, (0,0,0, 255)),
+        (827.4, 602.2, 139.3, 9.8, -166.6, (0,0,0, 255)),
+        (588.5, 448.6, 175.6, 11.2, 43.7, (0,0,0, 255)),
+        (589.6, 398.6, 50.4, 11.6, 102.3, (0,0,0, 255)),
+        (499.9, 525.9, 110.3, 10.5, -50, (0,0,0, 255)),
+        (802, 437.7, 50.4, 11.6, 102.3, (0,0,0, 255)),
+        (745.5, 415.7, 91.1, 24.5, 13.4, (0,0,0, 255)),
+        (684.4, 518.5, 18.6, 6.8, 13.4, (0,0,0, 255)),
+        (700.5, 522.5, 48.7, 6.7, 71.7, (0,0,0, 255)),
+        (591.4, 365.8, 33.8, 5.8, 102.3, (0,0,0, 255)),
+        (637.4, 341, 56.6, 6.7, 148.4, (0,0,0, 255)),
+        (687.6, 352.9, 56.6, 6.6, -168.6, (0,0,0, 255)),
+        # ... Añade aquí los demás parámetros de las imágenes restantes ...
+      
+    ]
+      # Dibujar todos los rectángulos
+    for x, y, ancho, alto, rotar, color in rect_params:
+        draw_rectangle(x, y, ancho, alto, rotar, color)
 
 
 
@@ -103,10 +135,10 @@ while not glfw.window_should_close(window):
     glClear(GL_COLOR_BUFFER_BIT)
 
     # Dibuja el rectángulo para el piso
-    draw_rectangle(31.1, 469.4, 1067.6, 187.4, 12.9, (122, 124, 49) )
+    # x, y, ancho, alto, rotation, color
+    draw_rectangle(142.3, 472, 1152.5, 187.4, 12.9, (122, 124, 49, 255) )
 
-    # Dibuja el círculo con los nuevos parámetros
-    draw_circle(435.3, 420.8, 174.3, 13.4, (0, 0, 0))
+    crear_bici()
 
     glfw.swap_buffers(window)
 
