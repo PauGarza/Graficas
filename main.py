@@ -1,6 +1,7 @@
 import glfw
 from OpenGL.GL import *
 import time
+from math import cos, sin, pi
 
 # Función para interpolar entre dos colores
 def lerp_color(color_start, color_end, t):
@@ -34,6 +35,28 @@ def draw_rectangle(x, y, width, height, rotation, color):
     glEnd()
     
     glPopMatrix()
+
+
+# Función para dibujar un círculo
+def draw_circle(x, y, ancho, rotation, color):
+    radius = ancho/2
+    num_segments = 100  # Cantidad de triángulos para aproximar el círculo
+    angle = 2 * pi / num_segments  # Ángulo entre cada segmento
+
+    glPushMatrix()
+    glTranslate(x, y, 0)  # Mover al centro del círculo
+    glRotatef(rotation, 0, 0, 1)  # Rotar alrededor del centro del círculo
+    glColor3ub(*color)
+
+    glBegin(GL_TRIANGLE_FAN)
+    glVertex2f(0, 0)  # Centro del círculo
+    for i in range(num_segments + 1):
+        glVertex2f(radius * cos(i * angle), radius * sin(i * angle))
+    glEnd()
+
+    glPopMatrix()
+
+
 
 # Inicialización de GLFW
 if not glfw.init():
@@ -80,7 +103,10 @@ while not glfw.window_should_close(window):
     glClear(GL_COLOR_BUFFER_BIT)
 
     # Dibuja el rectángulo para el piso
-    draw_rectangle(683 - 1570.2 / 2, 502 - 617.4 / 2, 1570.2, 617.4, 15.6, (122, 124, 49))
+    draw_rectangle(31.1, 469.4, 1067.6, 187.4, 12.9, (122, 124, 49) )
+
+    # Dibuja el círculo con los nuevos parámetros
+    draw_circle(435.3, 420.8, 174.3, 13.4, (0, 0, 0))
 
     glfw.swap_buffers(window)
 
