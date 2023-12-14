@@ -45,20 +45,30 @@ def draw_rectangle(upper_left_x, upper_left_y, width, height, rotation, color):
 
 
 # Función para dibujar un círculo
-def draw_circle(x, y, ancho, rotation, color):
-    radius = ancho/2
-    num_segments = 100  # Cantidad de triángulos para aproximar el círculo
-    angle = 2 * pi / num_segments  # Ángulo entre cada segmento
+def draw_circle(upper_left_x, upper_left_y, diameter, color):
+    # Calcular el centro del círculo
+    center_x = upper_left_x + diameter / 2
+    center_y = upper_left_y + diameter / 2
+    radius = diameter / 2
+
+    # Establecer el número de segmentos para crear una forma circular
+    num_segments = 100
 
     glPushMatrix()
-    glTranslate(x, y, 0)  # Mover al centro del círculo
-    glRotatef(rotation, 0, 0, 1)  # Rotar alrededor del centro del círculo
-    glColor4ub(*color)
+    # Trasladar al centro del círculo
+    glTranslate(center_x, center_y, 0)
+    # Establecer color y opacidad
+    glColor4ub(color[0], color[1], color[2], int(color[3] * 255))
 
+    # Comenzar a dibujar los triángulos que forman el círculo
     glBegin(GL_TRIANGLE_FAN)
-    glVertex2f(0, 0)  # Centro del círculo
+    # Centro del círculo
+    glVertex2f(0, 0)
     for i in range(num_segments + 1):
-        glVertex2f(radius * cos(i * angle), radius * sin(i * angle))
+        angle = 2 * pi * i / num_segments
+        x = radius * cos(angle)
+        y = radius * sin(angle)
+        glVertex2f(x, y)
     glEnd()
 
     glPopMatrix()
@@ -83,9 +93,18 @@ def crear_bici():
             (632.2, 340.8, 56.6, 6.6, -168.6, (0,0,0, 255)),
             # ... Añade aquí los demás parámetros de las imágenes restantes ...  
         ]
-      # Dibujar todos los rectángulos
+    #draw_circle(x, y, ancho, rotation, color)
+    circ_params = [
+            (412.7, 438.7, 174.3,  (0,0,0, 200)),
+            (748.6, 518.7, 174.3,  (0,0,0, 200)),
+            (681.5, 547.6, 52.6,  (0,0,0, 200))
+    ]
+    # Dibujar todos los rectángulos
     for x, y, ancho, alto, rotar, color in rect_params:
         draw_rectangle(x, y, ancho, alto, rotar, color)
+    # Dibujar todos los circulos
+    for x, y, ancho, color in circ_params:
+        draw_circle(x, y, ancho, color)
 
 
 
@@ -135,7 +154,7 @@ while not glfw.window_should_close(window):
 
     # Dibuja el rectángulo para el piso
     # x, y, ancho, alto, rotation, color
-    draw_rectangle(142.3, 472, 1152.5, 187.4, 12.9, (122, 124, 49, 255) )
+    draw_rectangle(106.8, 598.4, 1152.5, 187.4, 12.9, (122, 124, 49, 255) )
 
     crear_bici()
 
