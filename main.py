@@ -29,6 +29,16 @@ color_dia = (0.54, 0.81, 0.92)    # Azul día claro
 color_atardecer = (0.9, 0.6, 0.2) # Colores del atardecer
 color_noche = (0.1, 0.1, 0.3)     # Azul oscuro de la noche
 
+colores = [(0.9, 0.5, 0.3, 250),
+           (0.54, 0.81, 0.92, 250),
+           (0.9, 0.6, 0.2, 250),
+           (0.1, 0.1, 0.3, 250),
+           (141, 63, 10, 250),
+           (190, 177, 202, 250),
+           (213, 168, 73, 250),
+           (133, 161, 127, 250),
+           ]
+
 # Tiempos de inicio y duración de cada fase en segundos
 duracion_amanecer = 5
 duracion_dia = 10
@@ -103,7 +113,7 @@ def lerp(start, end, t):
     # Interpolación lineal entre dos valores
     return start + t * (end - start)
 
-bici_solida = (62,82,117,255) #3E5275
+bici_solida = (62,82,117,255, ) #3E5275
 bici_pedal = (201, 84, 126,200) #C9547E
 bici_llantas = (62, 53, 58,225) #3E353A
 
