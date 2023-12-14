@@ -19,85 +19,87 @@ duracion_dia = 10
 duracion_atardecer = 5
 duracion_noche = 10
 
-# Función para dibujar un rectángulo
 def draw_rectangle(upper_left_x, upper_left_y, width, height, rotation, color):
-    # Calcular el centro del rectángulo
     center_x = upper_left_x + width / 2
     center_y = upper_left_y + height / 2
-
     glPushMatrix()
-    # Trasladar al centro para rotación
     glTranslate(center_x, center_y, 0)
-    # Rotar alrededor del centro del rectángulo
     glRotatef(rotation, 0, 0, 1)
-    # Establecer color y opacidad
-    glColor4ub(color[0], color[1], color[2], int(color[3] * 255 / 100))
-    # Dibujar rectángulo con el centro en el origen
+    glColor4ub(color[0], color[1], color[2], color[3])  # Opacidad ya en el rango 0-255
     glBegin(GL_QUADS)
     glVertex2f(-width / 2, -height / 2)
     glVertex2f(width / 2, -height / 2)
     glVertex2f(width / 2, height / 2)
     glVertex2f(-width / 2, height / 2)
     glEnd()
-
     glPopMatrix()
 
-
-
-# Función para dibujar un círculo
 def draw_circle(upper_left_x, upper_left_y, diameter, color):
-    # Calcular el centro del círculo
     center_x = upper_left_x + diameter / 2
     center_y = upper_left_y + diameter / 2
     radius = diameter / 2
-
-    # Establecer el número de segmentos para crear una forma circular
     num_segments = 100
-
     glPushMatrix()
-    # Trasladar al centro del círculo
     glTranslate(center_x, center_y, 0)
-    # Establecer color y opacidad
-    glColor4ub(color[0], color[1], color[2], int(color[3] * 255))
-
-    # Comenzar a dibujar los triángulos que forman el círculo
+    glColor4ub(color[0], color[1], color[2], color[3])  # Opacidad ya en el rango 0-255
     glBegin(GL_TRIANGLE_FAN)
-    # Centro del círculo
     glVertex2f(0, 0)
     for i in range(num_segments + 1):
         angle = 2 * pi * i / num_segments
-        x = radius * cos(angle)
-        y = radius * sin(angle)
-        glVertex2f(x, y)
+        glVertex2f(radius * cos(angle), radius * sin(angle))
     glEnd()
-
     glPopMatrix()
+
+color_gold = (234, 185, 65, 255)
+
+color_white = (255, 255, 255, 255)
+
+def crea_sol(window_width, window_height, tiempo_actual, tiempo_total):
+    diametro_sol = 441  # El diámetro del sol según tu especificación
+    color_actual = color_gold if tiempo_actual <= 15 else color_white  # Elige el color basado en el tiempo
+    y_inicial = window_height  # Iniciar desde abajo
+    y_final = -diametro_sol  # Mover hacia arriba más allá del límite superior para que desaparezca
+
+    # Calcular posición y en función del tiempo
+    t = (tiempo_actual % 15) / 15  # Normalizar tiempo para el ciclo actual de 15 segundos
+    y_actual = lerp(y_inicial, y_final, t)
+
+    # Posición x del sol será el centro del cuadro
+    x_actual = window_width / 2 - diametro_sol / 2
+
+    # Dibuja el sol con la posición y color actuales
+    draw_circle(x_actual, y_actual, diametro_sol, color_actual)
+
+
+bici_solida = (62,82,117,255) #3E5275
+bici_pedal = (201, 84, 126,200) #C9547E
+bici_llantas = (62, 53, 58,225) #3E353A
 
 def crear_bici():
     # Rectángulos basados en los parámetros de las imágenes subidas
     # (x, y, ancho, alto, rotación, (color))
     rect_params = [
-            (573.9, 454, 223.1, 13.4, 13.4, (0,0,0, 100)),
-            (738, 533.9, 138.1, 8.5, 67.9, (0,0,0, 255)),
-            (678.9, 523.2, 122.1, 9.8, 129.8, (0,0,0, 255)),
-            (691.2, 576.4, 139.3, 9.8, -166.6, (0,0,0, 255)),
-            (545.8, 501.9, 191.3, 14, 43.7, (0,0,0, 255)),
-            (553.3, 416.2, 50.4, 11.6, 102.3, (0,0,0, 255)),
-            (484.2, 481.8, 110.3, 10.5, -50, (0,0,0, 255)),
-            (765.7, 456.3, 50.4, 11.6, 102.3, (0,0,0, 255)),
-            (741.4, 426, 91.1, 24.5, 13.4, (0,0,0, 255)),
-            (683.3, 520.6, 18.6, 6.8, 13.4, (0,0,0, 255)),
-            (680.5, 543.3, 48.7, 6.7, 71.7, (0,0,0, 255)),
-            (568.1, 378.8, 33.8, 5.8, 102.3, (0,0,0, 255)),
-            (583.2, 349.6, 56.6, 6.7, 148.4, (0,0,0, 255)),
-            (632.2, 340.8, 56.6, 6.6, -168.6, (0,0,0, 255)),
+            (573.9, 454, 223.1, 13.4, 13.4, bici_solida),
+            (738, 533.9, 138.1, 8.5, 67.9, bici_solida),
+            (678.9, 523.2, 122.1, 9.8, 129.8, bici_solida),
+            (691.2, 576.4, 139.3, 9.8, -166.6, bici_solida),
+            (545.8, 501.9, 191.3, 14, 43.7, bici_solida),
+            (553.3, 416.2, 50.4, 11.6, 102.3, bici_solida),
+            (484.2, 481.8, 110.3, 10.5, -50, bici_solida),
+            (765.7, 456.3, 50.4, 11.6, 102.3, bici_solida),
+            (741.4, 426, 91.1, 24.5, 13.4, bici_solida),
+            (683.3, 520.6, 18.6, 6.8, 13.4, bici_solida),
+            (680.5, 543.3, 48.7, 6.7, 71.7, bici_solida),
+            (568.1, 378.8, 33.8, 5.8, 102.3, bici_solida),
+            (583.2, 349.6, 56.6, 6.7, 148.4, bici_solida),
+            (632.2, 340.8, 56.6, 6.6, -168.6, bici_solida),
             # ... Añade aquí los demás parámetros de las imágenes restantes ...  
         ]
     #draw_circle(x, y, ancho, rotation, color)
     circ_params = [
-            (412.7, 438.7, 174.3,  (0,0,0, 200)),
-            (748.6, 518.7, 174.3,  (0,0,0, 200)),
-            (681.5, 547.6, 52.6,  (0,0,0, 200))
+            (412.7, 438.7, 174.3,  bici_llantas),
+            (748.6, 518.7, 174.3,  bici_llantas),
+            (681.5, 547.6, 52.6,  bici_pedal)
     ]
     # Dibujar todos los rectángulos
     for x, y, ancho, alto, rotar, color in rect_params:
@@ -105,6 +107,48 @@ def crear_bici():
     # Dibujar todos los circulos
     for x, y, ancho, color in circ_params:
         draw_circle(x, y, ancho, color)
+
+def lerp(start, end, t):
+    return start + t * (end - start)
+
+def crear_bici_animada(pos_inicial, tiempo_actual, tiempo_total):
+    rect_params = [
+            (573.9, 454, 223.1, 13.4, 13.4, bici_solida),
+            (738, 533.9, 138.1, 8.5, 67.9, bici_solida),
+            (678.9, 523.2, 122.1, 9.8, 129.8, bici_solida),
+            (691.2, 576.4, 139.3, 9.8, -166.6, bici_solida),
+            (545.8, 501.9, 191.3, 14, 43.7, bici_solida),
+            (553.3, 416.2, 50.4, 11.6, 102.3, bici_solida),
+            (484.2, 481.8, 110.3, 10.5, -50, bici_solida),
+            (765.7, 456.3, 50.4, 11.6, 102.3, bici_solida),
+            (741.4, 426, 91.1, 24.5, 13.4, bici_solida),
+            (683.3, 520.6, 18.6, 6.8, 13.4, bici_solida),
+            (680.5, 543.3, 48.7, 6.7, 71.7, bici_solida),
+            (568.1, 378.8, 33.8, 5.8, 102.3, bici_solida),
+            (583.2, 349.6, 56.6, 6.7, 148.4, bici_solida),
+            (632.2, 340.8, 56.6, 6.6, -168.6, bici_solida),
+            # ... Añade aquí los demás parámetros de las imágenes restantes ...  
+        ]
+    #draw_circle(x, y, ancho, rotation, color)
+    circ_params = [
+            (412.7, 438.7, 174.3,  bici_llantas),
+            (748.6, 518.7, 174.3,  bici_llantas),
+            (681.5, 547.6, 52.6,  bici_pedal)
+    ]
+
+    t = min(tiempo_actual / tiempo_total, 1)  # Asegurar que t está entre 0 y 1
+
+    for params in rect_params:
+        x_final, y_final = params[0], params[1]
+        x = lerp(pos_inicial[0], x_final, t)
+        y = lerp(pos_inicial[1], y_final, t)
+        draw_rectangle(x, y, *params[2:])
+
+    for params in circ_params:
+        x_final, y_final = params[0], params[1]
+        x = lerp(pos_inicial[0], x_final, t)
+        y = lerp(pos_inicial[1], y_final, t)
+        draw_circle(x, y, *params[2:])
 
 
 
@@ -158,11 +202,13 @@ while not glfw.window_should_close(window):
     glClearColor(*color_actual, 1.0)
     glClear(GL_COLOR_BUFFER_BIT)
 
+    crea_sol(1366, 1004, current_time, 30)
+
     # Dibuja el rectángulo para el piso
     # x, y, ancho, alto, rotation, color
     draw_rectangle(106.8, 598.4, 1152.5, 187.4, 12.9, (122, 124, 49, 255) )
 
-    crear_bici()
+    crear_bici_animada((0, 271.2), current_time, 3)
 
     glfw.swap_buffers(window)
 
