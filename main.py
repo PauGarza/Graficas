@@ -168,7 +168,7 @@ def crear_bici_animada(pos_inicial, tiempo_actual, tiempo_total=30):
         draw_circle(x, y, *params[2:])
 
 def fig_random():
-    figura = random.choice([True, False]) #0
+    figura = random.choice([True,False,False,False]) #0
     x_ini = random.uniform(0, 1366) #1
     y_ini = random.uniform(0, 1004) #2
     x_fin = random.uniform(0, 1366) #3
@@ -181,32 +181,27 @@ def fig_random():
     duracion =  30 - tiempo_ini
     return (figura, x_ini, y_ini, x_fin, y_fin, ancho, alto, rotar, color, tiempo_ini, duracion)
     
-def trasladar_rectangulo(figura, x_inicial, y_inicial, x_final, y_final, ancho, alto, rotar, color, tiempo_inicio, tiempo_actual, duracion):
 
+def trasladar_y_rotar_figura(figura, x_inicial, y_inicial, x_final, y_final, ancho, alto, rotar, color, tiempo_inicio, tiempo_actual, duracion):
     if tiempo_actual < tiempo_inicio:
-        # Si el tiempo actual es menor al tiempo de inicio, no hacer nada.
         return
 
-    # Calcular el tiempo transcurrido desde el inicio de la animación.
     tiempo_transcurrido = tiempo_actual - tiempo_inicio
-    
-    # Normalizar el tiempo transcurrido a un valor entre 0 y 1.
     t = max(0, min(1, tiempo_transcurrido / duracion))
 
-    # Calcular la nueva posición x e y del rectángulo mediante interpolación lineal.
     x_actual = x_inicial + (x_final - x_inicial) * t
     y_actual = y_inicial + (y_final - y_inicial) * t
+    angulo_rotacion = t * 360  # Rotar 360 grados a lo largo de la animación
 
-    # Dibujar el figura en la nueva posición.
     if figura:
-        draw_circle(x_actual, y_actual, ancho, color)
-        if t >= 1:
-            draw_circle(x_final, y_final, ancho, alto, rotar, color)
+        # Para el círculo, el centro ya está calculado en draw_circle
+        draw_circle(x_actual, y_actual, ancho, color)  # Asumiendo que 'ancho' es el diámetro del círculo
     else:
-        draw_rectangle(x_actual, y_actual, ancho, alto, rotar, color)
-        # Si la animación ha terminado, asegurarse de que el rectángulo esté en la posición final.
-        if t >= 1:
-            draw_rectangle(x_final, y_final, ancho, alto, rotar, color)
+        # Para el rectángulo, draw_rectangle espera la esquina superior izquierda
+        x_esquina = x_actual - ancho / 2
+        y_esquina = y_actual - alto / 2
+        draw_rectangle(x_esquina, y_esquina, ancho, alto, angulo_rotacion, color)
+
 
 # Inicialización de GLFW
 if not glfw.init():
@@ -275,7 +270,7 @@ while not glfw.window_should_close(window):
 
     for fig in figuras:
         #(figura, x_ini, y_ini, x_fin, y_fin, ancho, alto, rotar, color, tiempo_ini, duracion)
-        trasladar_rectangulo(
+        trasladar_y_rotar_figura(
         figura=fig[0],
         x_inicial=fig[1], y_inicial=fig[2], 
         x_final=fig[3], y_final=fig[4], 
@@ -285,7 +280,7 @@ while not glfw.window_should_close(window):
         tiempo_inicio=fig[9], 
         tiempo_actual=current_time, 
         duracion=fig[10]
-    )
+        )
 
     glfw.swap_buffers(window)
 
