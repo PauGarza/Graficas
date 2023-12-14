@@ -2,6 +2,7 @@ import glfw
 from OpenGL.GL import *
 import time
 from math import cos, sin, pi
+import random
 
 # Función para interpolar entre dos colores
 def lerp_color(color_start, color_end, t):
@@ -127,7 +128,7 @@ def crear_bici():
 def lerp(start, end, t):
     return start + t * (end - start)
 
-def crear_bici_animada(pos_inicial, tiempo_actual, tiempo_total):
+def crear_bici_animada(pos_inicial, tiempo_actual, tiempo_total=30):
     rect_params = [
             (573.9, 454, 223.1, 13.4, 13.4, bici_solida),
             (738, 533.9, 138.1, 8.5, 67.9, bici_solida),
@@ -166,7 +167,46 @@ def crear_bici_animada(pos_inicial, tiempo_actual, tiempo_total):
         y = lerp(pos_inicial[1], y_final, t)
         draw_circle(x, y, *params[2:])
 
+def fig_random():
+    figura = random.choice([True, False]) #0
+    x_ini = random.uniform(0, 1366) #1
+    y_ini = random.uniform(0, 1004) #2
+    x_fin = random.uniform(0, 1366) #3
+    y_fin = random.uniform(0, 1004) #4
+    ancho = random.uniform(50, 100)   #5
+    alto = random.uniform(50, 100)    #6
+    rotar = random.uniform(-360, 360) #7   
+    color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) #8 
+    tiempo_ini =  random.uniform(1, 30) #9
+    duracion =  30 - tiempo_ini
+    return (figura, x_ini, y_ini, x_fin, y_fin, ancho, alto, rotar, color, tiempo_ini, duracion)
+    
+def trasladar_rectangulo(figura, x_inicial, y_inicial, x_final, y_final, ancho, alto, rotar, color, tiempo_inicio, tiempo_actual, duracion):
 
+    if tiempo_actual < tiempo_inicio:
+        # Si el tiempo actual es menor al tiempo de inicio, no hacer nada.
+        return
+
+    # Calcular el tiempo transcurrido desde el inicio de la animación.
+    tiempo_transcurrido = tiempo_actual - tiempo_inicio
+    
+    # Normalizar el tiempo transcurrido a un valor entre 0 y 1.
+    t = max(0, min(1, tiempo_transcurrido / duracion))
+
+    # Calcular la nueva posición x e y del rectángulo mediante interpolación lineal.
+    x_actual = x_inicial + (x_final - x_inicial) * t
+    y_actual = y_inicial + (y_final - y_inicial) * t
+
+    # Dibujar el figura en la nueva posición.
+    if figura:
+        draw_circle(x_actual, y_actual, ancho, color)
+        if t >= 1:
+            draw_circle(x_final, y_final, ancho, alto, rotar, color)
+    else:
+        draw_rectangle(x_actual, y_actual, ancho, alto, rotar, color)
+        # Si la animación ha terminado, asegurarse de que el rectángulo esté en la posición final.
+        if t >= 1:
+            draw_rectangle(x_final, y_final, ancho, alto, rotar, color)
 
 # Inicialización de GLFW
 if not glfw.init():
@@ -196,6 +236,12 @@ glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
 start_time = time.time()
 
+n = 40 
+figuras = [0]*n
+
+for i in range(n):
+    figuras[i] = fig_random()
+
 # Loop principal
 while not glfw.window_should_close(window):
     glfw.poll_events()
@@ -203,6 +249,7 @@ while not glfw.window_should_close(window):
     # Calcular el tiempo transcurrido
     current_time = time.time() - start_time
     t = current_time / 30  # Normalizar el tiempo para la duración total de la animación
+    
 
     # Interpolación de colores para el fondo
     if current_time <= duracion_amanecer:
@@ -225,6 +272,20 @@ while not glfw.window_should_close(window):
     draw_rectangle(106.8, 598.4, 1152.5, 187.4, 12.9, (122, 124, 49, 255) )
 
     crear_bici_animada((0, 271.2), current_time, 3)
+
+    for fig in figuras:
+        #(figura, x_ini, y_ini, x_fin, y_fin, ancho, alto, rotar, color, tiempo_ini, duracion)
+        trasladar_rectangulo(
+        figura=fig[0],
+        x_inicial=fig[1], y_inicial=fig[2], 
+        x_final=fig[3], y_final=fig[4], 
+        ancho=fig[5], alto=fig[6], 
+        rotar=fig[7],
+        color=fig[8], 
+        tiempo_inicio=fig[9], 
+        tiempo_actual=current_time, 
+        duracion=fig[10]
+    )
 
     glfw.swap_buffers(window)
 
