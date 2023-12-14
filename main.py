@@ -115,6 +115,8 @@ if not glfw.init():
 # Creación de la ventana con las dimensiones deseadas
 window = glfw.create_window(1366, 1004, "Simulación del Cielo", None, None)
 
+
+
 if not window:
     glfw.terminate()
     exit()
@@ -127,6 +129,10 @@ glLoadIdentity()
 glOrtho(0, 1366, 1004, 0, -1, 1)  # Se invierte el eje Y para que 0,0 esté en la esquina superior izquierda
 glMatrixMode(GL_MODELVIEW)
 glLoadIdentity()
+
+# Habilitar blending para transparencia
+glEnable(GL_BLEND)
+glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
 start_time = time.time()
 
