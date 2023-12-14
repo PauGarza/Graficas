@@ -3,6 +3,21 @@ from OpenGL.GL import *
 import time
 from math import cos, sin, pi
 import random
+from PIL import Image  # Asegúrate de tener instalado el módulo PIL o Pillow
+
+def cargar_textura(ruta_imagen):
+    imagen = Image.open(ruta_imagen)
+    imagen = imagen.transpose(Image.FLIP_TOP_BOTTOM)  # Invertir la imagen en el eje Y
+    imagen_data = imagen.convert("RGBA").tobytes()
+
+    textura = glGenTextures(1)
+    glBindTexture(GL_TEXTURE_2D, textura)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imagen.width, imagen.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imagen_data)
+
+    return textura
+
 
 # Función para interpolar entre dos colores
 def lerp_color(color_start, color_end, t):
@@ -174,7 +189,7 @@ def fig_random():
     x_fin = random.uniform(0, 1366) #3
     y_fin = random.uniform(0, 1004) #4
     ancho = random.uniform(50, 100)   #5
-    alto = random.uniform(50, 100)    #6
+    alto = random.uniform(50, 75)    #6
     rotar = random.uniform(-360, 360) #7   
     color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) #8 
     tiempo_ini =  random.uniform(1, 30) #9
@@ -246,7 +261,7 @@ glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
 start_time = time.time()
 
-n = 40 
+n = 50 
 figuras = [0]*n
 
 for i in range(n):

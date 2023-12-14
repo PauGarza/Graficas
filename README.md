@@ -28,8 +28,10 @@ Este proyecto consiste en desarrollar una animación 2D utilizando OpenGL que na
    - Una vez activado el entorno virtual, instala los modulos utilizando pip, que es el sistema de gestión de paquetes de Python. Usa los siguientes comandos:
 
    `(env) C:[Ruta del proyecto]> pip install glfw`
-   
-   `(env) C:[Ruta del proyecto]> pip install PyOpenGL PyOpenGL_accelerate`
+
+   `(env) C:[Ruta del proyecto]> pip install PyOpenGL`
+
+   `(env) C:[Ruta del proyecto]> pip install pillow`
 
 4. **Correr el programa**:
    - En la línea de comando, después de activar `env` y descargar `GLFW` y `PyOpenGL` corre el programa: `python main.py`
