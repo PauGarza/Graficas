@@ -202,6 +202,23 @@ def trasladar_y_rotar_figura(figura, x_inicial, y_inicial, x_final, y_final, anc
         y_esquina = y_actual - alto / 2
         draw_rectangle(x_esquina, y_esquina, ancho, alto, angulo_rotacion, color)
 
+def crecer_rectangulo_central(tiempo_actual, tiempo_inicio, duracion, window_width, window_height):
+    if tiempo_actual < tiempo_inicio:
+        return
+
+    tiempo_transcurrido = tiempo_actual - tiempo_inicio
+    t = max(0, min(1, tiempo_transcurrido / duracion))
+
+    # Escala el rectángulo de 0 a la dimensión de la ventana
+    ancho = t * window_width
+    alto = t * window_height
+
+    # Coordenadas para que el rectángulo esté centrado
+    x_centro = (window_width - ancho) / 2
+    y_centro = (window_height - alto) / 2
+
+    color_rectangulo = (0, 0, 0, 255)  # Color negro sólido
+    draw_rectangle(x_centro, y_centro, ancho, alto, 0, color_rectangulo)
 
 # Inicialización de GLFW
 if not glfw.init():
@@ -209,8 +226,6 @@ if not glfw.init():
 
 # Creación de la ventana con las dimensiones deseadas
 window = glfw.create_window(1366, 1004, "Simulación del Cielo", None, None)
-
-
 
 if not window:
     glfw.terminate()
@@ -282,10 +297,13 @@ while not glfw.window_should_close(window):
         duracion=fig[10]
         )
 
+    if current_time >= 30:
+        crecer_rectangulo_central(current_time, 30, 3, 1366, 1004)
+
     glfw.swap_buffers(window)
 
     # Terminar la animación después de 30 segundos
-    if current_time >= 30:
+    if current_time >= 33:
         break
 
 glfw.terminate()
