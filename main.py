@@ -54,14 +54,27 @@ color_gold = (234, 185, 65, 255)
 
 color_white = (255, 255, 255, 255)
 
-def crea_sol(window_width, window_height, tiempo_actual, tiempo_total):
+def crea_sol(window_width, window_height, tiempo_actual):
     diametro_sol = 441  # El diámetro del sol según tu especificación
-    color_actual = color_gold if tiempo_actual <= 15 else color_white  # Elige el color basado en el tiempo
+    color_gold = (234, 185, 65, 255)  # Asumiendo que ya tienes esta variable definida
+    color_white = (255, 255, 255, 255)  # Asumiendo que ya tienes esta variable definida
+
+    # No hacer nada durante los primeros 3 segundos
+    if tiempo_actual <= 3:
+        return
+    
+    # Ajustar el tiempo_actual para la lógica de animación después de los primeros 3 segundos
+    tiempo_ajustado = tiempo_actual -3
+
+    # Elige el color basado en el tiempo ajustado
+    color_actual = color_gold if tiempo_ajustado <= 15 else color_white
+    
     y_inicial = window_height  # Iniciar desde abajo
     y_final = -diametro_sol  # Mover hacia arriba más allá del límite superior para que desaparezca
 
-    # Calcular posición y en función del tiempo
-    t = (tiempo_actual % 15) / 15  # Normalizar tiempo para el ciclo actual de 15 segundos
+    # Calcular la posición y en función del tiempo ajustado
+    # Asegurarse de que el tiempo se reinicie después de cada ciclo de 15 segundos
+    t = (tiempo_ajustado % 15) / 15  # Normalizar tiempo para el ciclo actual de 15 segundos
     y_actual = lerp(y_inicial, y_final, t)
 
     # Posición x del sol será el centro del cuadro
@@ -70,6 +83,9 @@ def crea_sol(window_width, window_height, tiempo_actual, tiempo_total):
     # Dibuja el sol con la posición y color actuales
     draw_circle(x_actual, y_actual, diametro_sol, color_actual)
 
+def lerp(start, end, t):
+    # Interpolación lineal entre dos valores
+    return start + t * (end - start)
 
 bici_solida = (62,82,117,255) #3E5275
 bici_pedal = (201, 84, 126,200) #C9547E
@@ -202,7 +218,7 @@ while not glfw.window_should_close(window):
     glClearColor(*color_actual, 1.0)
     glClear(GL_COLOR_BUFFER_BIT)
 
-    crea_sol(1366, 1004, current_time, 30)
+    crea_sol(1366, 1004, current_time)
 
     # Dibuja el rectángulo para el piso
     # x, y, ancho, alto, rotation, color
