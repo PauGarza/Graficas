@@ -217,7 +217,7 @@ def trasladar_y_rotar_figura(figura, x_inicial, y_inicial, x_final, y_final, anc
         y_esquina = y_actual - alto / 2
         draw_rectangle(x_esquina, y_esquina, ancho, alto, angulo_rotacion, color)
 
-def crecer_rectangulo_central(tiempo_actual, tiempo_inicio, duracion, window_width, window_height):
+def crecer_rectangulo_central(tiempo_actual, tiempo_inicio, duracion, window_width, window_height, id_textura):
     if tiempo_actual < tiempo_inicio:
         return
 
@@ -232,8 +232,19 @@ def crecer_rectangulo_central(tiempo_actual, tiempo_inicio, duracion, window_wid
     x_centro = (window_width - ancho) / 2
     y_centro = (window_height - alto) / 2
 
-    color_rectangulo = (0, 0, 0, 255)  # Color negro sólido
-    draw_rectangle(x_centro, y_centro, ancho, alto, 0, color_rectangulo)
+    # Vincular la textura
+    glBindTexture(GL_TEXTURE_2D, id_textura)
+    glEnable(GL_TEXTURE_2D)
+
+    # Dibujar el rectángulo con la textura
+    glBegin(GL_QUADS)
+    glTexCoord2f(0, 1); glVertex2f(x_centro, y_centro)
+    glTexCoord2f(1, 1); glVertex2f(x_centro + ancho, y_centro)
+    glTexCoord2f(1, 0); glVertex2f(x_centro + ancho, y_centro + alto)
+    glTexCoord2f(0, 0); glVertex2f(x_centro, y_centro + alto)
+    glEnd()
+
+    glDisable(GL_TEXTURE_2D)
 
 # Inicialización de GLFW
 if not glfw.init():
@@ -296,7 +307,7 @@ while not glfw.window_should_close(window):
     # x, y, ancho, alto, rotation, color
     draw_rectangle(106.8, 598.4, 1152.5, 187.4, 12.9, (122, 124, 49, 255) )
 
-    crear_bici_animada((0, 271.2), current_time, 3)
+    crear_bici_animada((0, 271.2), current_time, 5)
 
     for fig in figuras:
         #(figura, x_ini, y_ini, x_fin, y_fin, ancho, alto, rotar, color, tiempo_ini, duracion)
@@ -312,13 +323,17 @@ while not glfw.window_should_close(window):
         duracion=fig[10]
         )
 
+    glColor4f(1.0, 1.0, 1.0, 1.0)  # Establecer el color en blanco
+
+    id_textura = cargar_textura(r"C:\Users\intercambio\Desktop\Gráficas\Graficas\bici.png")
+
     if current_time >= 30:
-        crecer_rectangulo_central(current_time, 30, 3, 1366, 1004)
+        crecer_rectangulo_central(current_time, 30, 5, 1366, 1004, id_textura)
 
     glfw.swap_buffers(window)
 
     # Terminar la animación después de 30 segundos
-    if current_time >= 33:
+    if current_time >= 35:
         break
 
 glfw.terminate()
