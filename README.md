@@ -24,7 +24,14 @@ Este proyecto consiste en desarrollar una animación 2D utilizando OpenGL que na
    - En la línea de comandos, navega al directorio del proyecto si aún no lo has hecho.
    - Activa el entorno virtual con `env\Scripts\activate` en Windows. Verás el nombre del entorno virtual en la línea de comandos.
 
-3. **Correr el programa**:
-   - En la línea de comando, después de activar `env` corre el programa: `python main.py`
+3. **Instalar GLFW y PyOpenGL**
+   - Una vez activado el entorno virtual, instala los modulos utilizando pip, que es el sistema de gestión de paquetes de Python. Usa los siguientes comandos:
+
+   `(env) C:[Ruta del proyecto]> pip install glfw`
+   
+   `(env) C:[Ruta del proyecto]> pip install PyOpenGL PyOpenGL_accelerate`
+
+4. **Correr el programa**:
+   - En la línea de comando, después de activar `env` y descargar `GLFW` y `PyOpenGL` corre el programa: `python main.py`
 
 
