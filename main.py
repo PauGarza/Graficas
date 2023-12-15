@@ -335,7 +335,7 @@ while not glfw.window_should_close(window):
 
     glColor4f(1.0, 1.0, 1.0, 1.0)  # Establecer el color en blanco
 
-    id_textura = cargar_textura(r"C:\Users\intercambio\Desktop\Gráficas\Graficas\bici.png")
+    id_textura = cargar_textura(r"C:\Users\pauli\OneDrive\Documentos\Graficas\Graficas\bici.png")
 
     if current_time >= 30:
         crecer_rectangulo_central(current_time, 30, 5, 1366, 1004, id_textura)
