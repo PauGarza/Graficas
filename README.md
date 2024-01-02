@@ -6,6 +6,8 @@
 
 ## Video
 
+Dar click en la siguiente foto para ver el video: 
+
 [![Video Bici](bici.png)](https://drive.google.com/file/d/156_p5FS6Qp_RKQBWha2guKRGrjNSNzMx/view)
 
 
