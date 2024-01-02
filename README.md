@@ -6,7 +6,7 @@
 
 ## Video
 
-[![Video Bici](https://drive.google.com/file/d/1weJ5B8fDyjeXpYEt29eLm-oWaIXw0GnW/view?usp=sharing)](https://drive.google.com/file/d/156_p5FS6Qp_RKQBWha2guKRGrjNSNzMx/view)
+[![Video Bici](bici.png)](https://drive.google.com/file/d/156_p5FS6Qp_RKQBWha2guKRGrjNSNzMx/view)
 
 
 ## Introducción
